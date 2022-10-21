@@ -10,46 +10,69 @@ public class StepTracker {
         }
     }
 
-    public void SaveStepsForSpecificDay(int month, int day, int numberOfSteps) {
+    public void saveStepsForSpecificDay(int month, int day, int numberOfSteps) {
         stepData.get(month)[day - 1] = numberOfSteps;
         System.out.println("Количество шагов за " + day + " день " + month + " месяца установлено и равно " + numberOfSteps + ".\n");
     }
 
-    public void ViewStatisticsForMonth(int month) {
-        int totalSteps = 0;
-        int maxSteps = 0;
-        // Максимальная "серия" подряд идущих дней, когда выполнена цель
-        int maxStreak = 0;
-        // Текущая "серия" подряд идущих дней, когда выполнена цель
-        int currentStreak = 0;
-        for (int i = 1; i <= 30; ++i) {
-            totalSteps += stepData.get(month)[i - 1];
-            // Поиск максимума
-            if (stepData.get(month)[i - 1] > maxSteps) {
-                maxSteps = stepData.get(month)[i - 1];
-            }
-            // Поиск максимальной "серии"
-            if (stepData.get(month)[i - 1] >= stepGoal) {
-                ++currentStreak;
-                if (currentStreak > maxStreak) {
-                    maxStreak = currentStreak;
-                }
-            }
-            if (i < 30) {
-                System.out.print(i + " день: " + stepData.get(month)[i - 1] + ", ");
-            } else {
-                System.out.println(i + " день: " + stepData.get(month)[i - 1]);
-            }
-        }
+    public void viewStatisticsForMonth(int month) {
+        printStepsPerEachDay(month);
+        int totalSteps = findTotalSteps(month);
+        int maxSteps = findMaxSteps(month);
+        int maxStreak = findMaxStreak(month);
         System.out.println("Общее количество шагов за месяц: " + totalSteps);
         System.out.println("Максимальное пройденное количество шагов в месяце: " + maxSteps);
         System.out.println("Среднее количество шагов: " + (double) totalSteps / 30);
         Converter converter = new Converter();
         System.out.println("Пройденная дистанция: " + converter.ConvertStepsToKilometers(totalSteps) + " км.");
         System.out.println("Количество сожжённых килокалорий: " + converter.ConvertStepsToKilocalorie(totalSteps) + '\n');
+        System.out.println("Лучшая серия: " + maxStreak);
     }
 
-    public void ChangeStepGoal(int newGoal) {
+    private void printStepsPerEachDay(int month) {
+        for (int i = 1; i <= 30; ++i) {
+            if (i < 30) {
+                System.out.print(i + " день: " + stepData.get(month)[i - 1] + ", ");
+            } else {
+                System.out.println(i + " день: " + stepData.get(month)[i - 1]);
+            }
+        }
+    }
+
+    int findTotalSteps(int month) {
+        int totalSteps = 0;
+        for (int i = 1; i <= 30; ++i) {
+            totalSteps += stepData.get(month)[i - 1];
+        }
+        return totalSteps;
+    }
+
+    private int findMaxSteps(int month) {
+        int maxSteps = 0;
+        for (int i = 1; i <= 30; ++i) {
+            if (stepData.get(month)[i - 1] > maxSteps) {
+                maxSteps = stepData.get(month)[i - 1];
+            }
+        }
+        return maxSteps;
+    }
+
+    private int findMaxStreak(int month) {
+        int maxStreak = 0;
+        int currentStreak = 0;
+        for (int i = 1; i <= 30; ++i) {
+            if (stepData.get(month)[i - 1] >= stepGoal) {
+                // Можно подробнее, почему тут нужно использовать пост-инкремент?
+                currentStreak++;
+                if (currentStreak > maxStreak) {
+                    maxStreak = currentStreak;
+                }
+            }
+        }
+        return maxStreak;
+    }
+
+    public void changeStepGoal(int newGoal) {
         if (newGoal < 0) {
             System.out.println("Целевое количество шагов не может быть отрицательным.\n");
         } else {
