@@ -6,34 +6,14 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         StepTracker stepTracker = new StepTracker();
         do {
-            command = getCommand(scanner);
+            printMenu();
+            command = scanner.nextInt();
             if (command == 1) {
-                int month = getMonth(scanner);
-                if (month < 0 || month > 11) {
-                    System.out.println("Неверный номер месяца.\n");
-                    continue;
-                }
-                int day = getDay(scanner);
-                if (day < 1 || day > 30) {
-                    System.out.println("Неверный номер дня.\n");
-                    continue;
-                }
-                int numberOfSteps = getSteps(scanner);
-                if (numberOfSteps < 0) {
-                    System.out.println("Неверное количество шагов.\n");
-                    continue;
-                }
-                stepTracker.saveStepsForSpecificDay(month, day, numberOfSteps);
+                setStepsForSpecificDay(stepTracker, scanner);
             } else if (command == 2) {
-                int month = getMonth(scanner);
-                if (month < 0 || month > 11) {
-                    System.out.println("Неверный номер месяца.\n");
-                    continue;
-                }
-                stepTracker.viewStatisticsForMonth(month);
+                printStatisticsForSpecificMonth(stepTracker, scanner);
             } else if (command == 3) {
-                int stepGoal = getStepGoal(scanner);
-                stepTracker.changeStepGoal(scanner.nextInt());
+                setStepGoal(stepTracker, scanner);
             } else if (command == 4) {
                 System.out.println("Выход из приложения.");
             } else {
@@ -46,28 +26,40 @@ public class Main {
         System.out.println("Введите номер команды:\n1.Ввести количество шагов за определённый день\n2.Напечатать статистику за определённый месяц\n3.Изменить цель по количеству шагов в день\n4.Выйти из приложения.");
     }
 
-    public static int getMonth(Scanner scanner) {
+    public static void setStepsForSpecificDay(StepTracker stepTracker, Scanner scanner) {
         System.out.println("Введите номер месяца: ");
-        return scanner.nextInt();
-    }
-
-    public static int getDay(Scanner scanner) {
+        int month = scanner.nextInt();
+        if (month < 0 || month > 11) {
+            System.out.println("Неверный номер месяца.\n");
+            return;
+        }
         System.out.println("Введите номер дня: ");
-        return scanner.nextInt();
-    }
-
-    public static int getSteps(Scanner scanner) {
+        int day = scanner.nextInt();
+        if (day < 1 || day > 30) {
+            System.out.println("Неверный номер дня.\n");
+            return;
+        }
         System.out.println("Введите количество шагов: ");
-        return scanner.nextInt();
+        int numberOfSteps = scanner.nextInt();
+        if (numberOfSteps < 0) {
+            System.out.println("Неверное количество шагов.\n");
+            return;
+        }
+        stepTracker.saveStepsForSpecificDay(month, day, numberOfSteps);
     }
 
-    public static int getStepGoal(Scanner scanner) {
+    public static void printStatisticsForSpecificMonth(StepTracker stepTracker, Scanner scanner) {
+        System.out.println("Введите номер месяца: ");
+        int month = scanner.nextInt();
+        if (month < 0 || month > 11) {
+            System.out.println("Неверный номер месяца.\n");
+            return;
+        }
+        stepTracker.viewStatisticsForMonth(month);
+    }
+
+    public static void setStepGoal(StepTracker stepTracker, Scanner scanner) {
         System.out.println("Введите целевое количество шагов: ");
-        return scanner.nextInt();
-    }
-
-    public static int getCommand(Scanner scanner) {
-        printMenu();
-        return scanner.nextInt();
+        stepTracker.changeStepGoal(scanner.nextInt());
     }
 }

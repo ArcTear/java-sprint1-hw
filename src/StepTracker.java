@@ -25,8 +25,8 @@ public class StepTracker {
         System.out.println("Среднее количество шагов: " + (double) totalSteps / 30);
         Converter converter = new Converter();
         System.out.println("Пройденная дистанция: " + converter.convertStepsToKilometers(totalSteps) + " км.");
-        System.out.println("Количество сожжённых килокалорий: " + converter.convertStepsToKilocalorie(totalSteps) + '\n');
-        System.out.println("Лучшая серия: " + maxStreak);
+        System.out.println("Количество сожжённых килокалорий: " + converter.convertStepsToKilocalorie(totalSteps));
+        System.out.println("Лучшая серия: " + maxStreak + "\n");
     }
 
     private void printStepsPerEachDay(int month) {
@@ -62,6 +62,7 @@ public class StepTracker {
         int currentStreak = 0;
         for (int i = 1; i <= 30; ++i) {
             if (stepData.get(month)[i - 1] >= stepGoal) {
+                // Можно подробнее, почему тут нужно использовать пост-инкремент?
                 currentStreak++;
                 if (currentStreak > maxStreak) {
                     maxStreak = currentStreak;
