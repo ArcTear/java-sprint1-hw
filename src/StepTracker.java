@@ -62,7 +62,6 @@ public class StepTracker {
         int currentStreak = 0;
         for (int i = 1; i <= 30; ++i) {
             if (stepData.get(month)[i - 1] >= stepGoal) {
-                // Можно подробнее, почему тут нужно использовать пост-инкремент?
                 currentStreak++;
                 if (currentStreak > maxStreak) {
                     maxStreak = currentStreak;
